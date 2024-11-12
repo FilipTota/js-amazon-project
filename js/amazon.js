@@ -53,9 +53,61 @@ products.forEach((product) => {
             Added
         </div>
 
-        <button class="add-to-cart-button button-primary">Add to Cart</button>
+        <button class="add-to-cart-button button-primary js-add-to-cart" data-product-name="${
+          product.name
+        }" data-product-id="${product.id}">Add to Cart</button>
     </div>
   `;
 });
 
 document.querySelector(".js-products-grid").innerHTML = productsHtml;
+
+document.querySelectorAll(".js-add-to-cart").forEach((button) => {
+  button.addEventListener("click", () => {
+    // add product to a cart
+    // we can just push product object with data we want to load
+    // however, when we clik this button how will we know whict product to add?
+    // to solve this product we are gonna learn a feature of html called Data Attribute
+
+    // Data Attribute is jus another html attribute
+    // the purpose of data attribute is to attach any information to an element
+    // exampele of data-attribute is in add to cart button above
+    // we add data attribute after the class attribute
+
+    // Data attributes have to start the name with data-, and then after dash, we can add any name we want (like in the example above -> data-procuct-name)w
+
+    // .dataset -> gives us all data attributes that are attaced to this button
+    const productName = button.dataset.productName;
+    const productId = button.dataset.productId;
+
+    // instead of using productName we are gonna use product ID to identify if
+    // it's not good practice to identify by product name because there could be two drifferent products with same name
+    // that's why we need to use ID
+
+    // to increase cart quantity if we add two same products (right now if we add to same products to cart quantity stays 1) we need to loop throught cart to check if the product aleary exists
+    let matchingItem; // to save matching item and to figure out if item exists
+    cart.forEach((item) => {
+      // if (productName === item.productName) {
+      //   // saving item if already exists
+      //   matchingItem = item;
+      // }
+      if (productId === item.productId) {
+        matchingItem = item;
+      }
+    });
+
+    if (matchingItem) {
+      // if exists increase quantity by 1
+      matchingItem.quantity += 1;
+    } else {
+      // if item is not inside cart (no mathing) then we add it to cart
+      cart.push({
+        productId,
+        productName,
+        quantity: 1,
+      });
+    }
+
+    console.log("cart :>> ", cart);
+  });
+});
