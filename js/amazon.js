@@ -1,5 +1,8 @@
 // products variable is comming from /data/products.js file because we included it in the script element in our amazon.html file
 
+// get from another file:
+import { cart } from "../data/cart.js";
+
 // to combine all this html together
 let productsHtml = "";
 

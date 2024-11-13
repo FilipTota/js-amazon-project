@@ -63,7 +63,29 @@
   <!-- we are loading two js files and order matters-->
   <!-- scripts get loaded one by one -->
   <!-- so if we want to use products, first we need to load them and the we can use them inside amazon.js file -->
-  <script src="/data/cart.js"></script>
+
+  <!-- <script src="/data/cart.js"></script>
   <script src="/data/products.js"></script>
-  <script src="/js/amazon.js"></script>
+  <script src="/js/amazon.js"></script> -->
+
+  <!-- defining different js files thorught script tags  like code above can cause Naming Conflicts -->
+  <!-- Example with cart -> we have cart variable defined inside cart.js and if we want to create new variable called cart, for example, inside amazon.js we will get error that identifier 'cart' has already been declared -->
+  <!-- to prevent this we are gonna use new feature called Modules -->
+  <!-- Module basically contains a variable inside a file and it will not cause conflicts with anything outside the file -->
+
+  <!-- To create a module: -->
+  <!-- 1. Create a file -> and run our code inside a file  -->
+  <!-- 2. Don't load a file with script tag  -->
+  <!-- By doing this and variables we create inside the file, will be contained inside the file and it won't cause a naming confilcts -->
+
+  <!-- so we remove script tag for cart.js -->
+  <!-- <script src="/data/cart.js"></script> -->
+  <!-- <script src="/data/products.js"></script> -->
+
+  <!-- type="module" let's this file (amazon.js) to get variables out of other files -->
+  <script src="/js/amazon.js" type="module"></script>
+
+  <!-- Benefits of modules: -->
+  <!-- 1. Prevent Naming conflicts -->
+  <!-- 2. Don't have to worry about order of files -->
 </html>
