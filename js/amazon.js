@@ -3,6 +3,7 @@
 // get from another file:
 import { cart, addToCart } from "../data/cart.js";
 import { products } from "../data/products.js";
+import { formatCurrency } from "./utils/money.js";
 
 // to combine all this html together
 let productsHtml = "";
@@ -31,9 +32,7 @@ products.forEach((product) => {
             }</div>
         </div>
 
-        <div class="product-price">$${(product.priceCents / 100).toFixed(
-          2 // to show two decimals
-        )}</div>
+        <div class="product-price">$${formatCurrency(product.priceCents)}</div>
 
         <div class="product-quantity-container">
             <select class="js-quantity-selector-${product.id}">
