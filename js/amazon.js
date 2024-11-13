@@ -2,6 +2,7 @@
 
 // get from another file:
 import { cart } from "../data/cart.js";
+import { products } from "../data/products.js";
 
 // to combine all this html together
 let productsHtml = "";
