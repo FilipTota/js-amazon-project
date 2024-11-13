@@ -1,7 +1,7 @@
 // products variable is comming from /data/products.js file because we included it in the script element in our amazon.html file
 
 // get from another file:
-import { cart } from "../data/cart.js";
+import { cart, addToCart } from "../data/cart.js";
 import { products } from "../data/products.js";
 
 // to combine all this html together
@@ -66,6 +66,30 @@ products.forEach((product) => {
 
 document.querySelector(".js-products-grid").innerHTML = productsHtml;
 
+// this function will not be moved to cart.js because it is updating the page where the cart is displyed and not the actual cart
+const updateCartQuantity = () => {
+  // update total cart quantity
+  let cartQuantity = 0;
+  cart.forEach((cartItem) => {
+    cartQuantity += cartItem.quantity;
+  });
+  // add cart quantity to page (in shopping cart)
+  document.querySelector(".js-cart-quantity").innerHTML = cartQuantity;
+};
+
+const displayMessageAdded = () => {
+  // to prevent message being shown and disapearing quickly after one more press of add to cart button
+  clearTimeout(timeoutId);
+
+  // show message added
+  const messageAdded = document.querySelector(`.js-added-to-cart`);
+  messageAdded.classList.add(`added-to-cart-visible`);
+
+  timeoutId = setTimeout(() => {
+    messageAdded.classList.remove("added-to-cart-visible");
+  }, 2000);
+};
+
 let timeoutId;
 document.querySelectorAll(".js-add-to-cart").forEach((button) => {
   button.addEventListener("click", () => {
@@ -87,61 +111,16 @@ document.querySelectorAll(".js-add-to-cart").forEach((button) => {
 
     // destructuring productName and productId
     // .dataset -> gives us all data attributes that are attaced to this button
-    const { productName, productId } = button.dataset;
+    const { productId, productName } = button.dataset;
 
     const selectElement = document.querySelector(
       `.js-quantity-selector-${productId}`
     );
     const selectedValue = selectElement.value;
 
-    // instead of using productName we are gonna use product ID to identify if
-    // it's not good practice to identify by product name because there could be two drifferent products with same name
-    // that's why we need to use ID
-
-    // to increase cart quantity if we add two same products (right now if we add to same products to cart quantity stays 1) we need to loop throught cart to check if the product aleary exists
-    let matchingItem; // to save matching item and to figure out if item exists
-    cart.forEach((item) => {
-      // if (productName === item.productName) {
-      //   // saving item if already exists
-      //   matchingItem = item;
-      // }
-      if (productId === item.productId) {
-        matchingItem = item;
-      }
-    });
-
-    if (matchingItem) {
-      // if exists increase quantity by 1
-      selectedValue
-        ? (matchingItem.quantity += Number(selectedValue))
-        : (matchingItem.quantity += 1);
-    } else {
-      // if item is not inside cart (no mathing) then we add it to cart
-      cart.push({
-        productId,
-        productName,
-        quantity: selectedValue ? Number(selectedValue) : 1,
-      });
-    }
-
-    // update total cart quantity
-    let cartQuantity = 0;
-    cart.forEach((item) => {
-      cartQuantity += item.quantity;
-    });
-
-    // to prevent message being shown and disapearing quickly after one more press of add to cart button
-    clearTimeout(timeoutId);
-
-    // show message added
-    const messageAdded = document.querySelector(`.js-added-to-cart`);
-    messageAdded.classList.add(`added-to-cart-visible`);
-
-    timeoutId = setTimeout(() => {
-      messageAdded.classList.remove("added-to-cart-visible");
-    }, 2000);
-
-    // add cart quantity to page (in shopping cart)
-    document.querySelector(".js-cart-quantity").innerHTML = cartQuantity;
+    // to clean our code
+    addToCart(productId, productName, selectedValue);
+    updateCartQuantity();
+    displayMessageAdded();
   });
 });
