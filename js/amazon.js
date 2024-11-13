@@ -32,7 +32,7 @@ products.forEach((product) => {
         )}</div>
 
         <div class="product-quantity-container">
-            <select>
+            <select class="js-quantity-selector-${product.id}">
             <option selected value="1">1</option>
             <option value="2">2</option>
             <option value="3">3</option>
@@ -48,7 +48,7 @@ products.forEach((product) => {
 
         <div class="product-spacer"></div>
 
-        <div class="added-to-cart">
+        <div class="added-to-cart js-added-to-cart">
             <img src="images/icons/checkmark.png" />
             Added
         </div>
@@ -62,6 +62,7 @@ products.forEach((product) => {
 
 document.querySelector(".js-products-grid").innerHTML = productsHtml;
 
+let timeoutId;
 document.querySelectorAll(".js-add-to-cart").forEach((button) => {
   button.addEventListener("click", () => {
     // add product to a cart
@@ -77,8 +78,17 @@ document.querySelectorAll(".js-add-to-cart").forEach((button) => {
     // Data attributes have to start the name with data-, and then after dash, we can add any name we want (like in the example above -> data-procuct-name)w
 
     // .dataset -> gives us all data attributes that are attaced to this button
-    const productName = button.dataset.productName;
-    const productId = button.dataset.productId;
+    // const productName = button.dataset.productName;
+    // const productId = button.dataset.productId;
+
+    // destructuring productName and productId
+    // .dataset -> gives us all data attributes that are attaced to this button
+    const { productName, productId } = button.dataset;
+
+    const selectElement = document.querySelector(
+      `.js-quantity-selector-${productId}`
+    );
+    const selectedValue = selectElement.value;
 
     // instead of using productName we are gonna use product ID to identify if
     // it's not good practice to identify by product name because there could be two drifferent products with same name
@@ -98,13 +108,15 @@ document.querySelectorAll(".js-add-to-cart").forEach((button) => {
 
     if (matchingItem) {
       // if exists increase quantity by 1
-      matchingItem.quantity += 1;
+      selectedValue
+        ? (matchingItem.quantity += Number(selectedValue))
+        : (matchingItem.quantity += 1);
     } else {
       // if item is not inside cart (no mathing) then we add it to cart
       cart.push({
         productId,
         productName,
-        quantity: 1,
+        quantity: selectedValue ? Number(selectedValue) : 1,
       });
     }
 
@@ -113,6 +125,17 @@ document.querySelectorAll(".js-add-to-cart").forEach((button) => {
     cart.forEach((item) => {
       cartQuantity += item.quantity;
     });
+
+    // to prevent message being shown and disapearing quickly after one more press of add to cart button
+    clearTimeout(timeoutId);
+
+    // show message added
+    const messageAdded = document.querySelector(`.js-added-to-cart`);
+    messageAdded.classList.add(`added-to-cart-visible`);
+
+    timeoutId = setTimeout(() => {
+      messageAdded.classList.remove("added-to-cart-visible");
+    }, 2000);
 
     // add cart quantity to page (in shopping cart)
     document.querySelector(".js-cart-quantity").innerHTML = cartQuantity;

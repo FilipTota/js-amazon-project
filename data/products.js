@@ -469,4 +469,26 @@ const products = [
     priceCents: 2400,
     keywords: ["sweaters", "hoodies", "apparel", "mens"],
   },
+  {
+    id: "bc3218e9-4989-631f-b7cf-57fde063a718",
+    image: "images/products/backpack.jpg",
+    name: "Camping Backpack",
+    rating: {
+      stars: 4.5,
+      count: 2531,
+    },
+    priceCents: 6049,
+    keywords: ["sweaters", "hoodies", "apparel", "mens"],
+  },
+  {
+    id: "bc5131e9-1959-631f-b7cf-57fde063a718",
+    image: "images/products/umbrella.jpg",
+    name: "Green Umbrella",
+    rating: {
+      stars: 4,
+      count: 522,
+    },
+    priceCents: 1599,
+    keywords: ["sweaters", "hoodies", "apparel", "mens"],
+  },
 ];
