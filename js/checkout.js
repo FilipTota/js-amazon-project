@@ -104,6 +104,7 @@ document.querySelectorAll(".js-delete-link").forEach((link) => {
     const container = document.querySelector(
       `.js-cart-item-container-${productId}`
     );
+    // .remove() will remove it from the page (every element we get from DOM has .remove() method)
     container.remove();
   });
 });

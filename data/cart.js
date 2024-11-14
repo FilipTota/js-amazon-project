@@ -1,15 +1,23 @@
-export let cart = [
-  {
-    productId: "e43638ce-6aa0-4b85-b27f-e1d07eb678c6",
-    quantity: 2,
-  },
-  {
-    productId: "15b6fc6f-327a-4ec4-896f-486349e85a3d",
-    quantity: 1,
-  },
-];
+// get cart data from localStorage
+export let cart = JSON.parse(localStorage.getItem("cart"));
+if (!cart) {
+  cart = [
+    {
+      productId: "e43638ce-6aa0-4b85-b27f-e1d07eb678c6",
+      quantity: 2,
+    },
+    {
+      productId: "15b6fc6f-327a-4ec4-896f-486349e85a3d",
+      quantity: 1,
+    },
+  ];
+}
 
 // best practice is to have all the related code inside one file
+
+export const saveToStorage = () => {
+  localStorage.setItem("cart", JSON.stringify(cart));
+};
 
 export const addToCart = (productId, productName, selectedValue) => {
   // instead of using productName we are gonna use product ID to identify if
@@ -41,6 +49,8 @@ export const addToCart = (productId, productName, selectedValue) => {
       quantity: selectedValue ? Number(selectedValue) : 1,
     });
   }
+  // save cart to local storage to avoid loosing/reseting cart data on page reload
+  saveToStorage();
 };
 
 export const removeFromCart = (productId) => {
@@ -52,4 +62,5 @@ export const removeFromCart = (productId) => {
   });
 
   cart = newCart;
+  saveToStorage();
 };
