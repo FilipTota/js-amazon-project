@@ -66,7 +66,7 @@ products.forEach((product) => {
 document.querySelector(".js-products-grid").innerHTML = productsHtml;
 
 // this function will not be moved to cart.js because it is updating the page where the cart is displyed and not the actual cart
-const updateCartQuantity = () => {
+export const updateCartQuantity = () => {
   // update total cart quantity
   let cartQuantity = 0;
   cart.forEach((cartItem) => {
@@ -123,3 +123,5 @@ document.querySelectorAll(".js-add-to-cart").forEach((button) => {
     displayMessageAdded();
   });
 });
+
+updateCartQuantity();

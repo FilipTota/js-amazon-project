@@ -209,3 +209,28 @@
   margin-top: 11px;
   margin-bottom: 15px;
 }
+
+.input-quantity-link {
+  width: 30px;
+  display: none;
+}
+
+.save-quantity-link {
+  display: none;
+}
+
+/*.is-editing-quantity is set before .input-quantity-link & .save-quantity-link to apply this css values only if the .is-editing-quantity exists */
+.is-editing-quantity .input-quantity-link {
+  display: initial; /* display: initial; applies the initial (or default) value of a property to an element which means that the selected elemnts will have default/reseted css property */
+  /* when we click on update (functionality inside checkout.js file) .input-quantity-link will be set to visible (display: none; from lines above will not be applied) */
+}
+
+.is-editing-quantity .save-quantity-link {
+  /* same as inside .input-quantity-link */
+  display: initial;
+}
+
+/* make the .update-quantity-link not visible when .is-editing-quantity is applied */
+.is-editing-quantity .update-quantity-link {
+  display: none;
+}

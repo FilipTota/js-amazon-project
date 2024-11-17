@@ -64,3 +64,13 @@ export const removeFromCart = (productId) => {
   cart = newCart;
   saveToStorage();
 };
+
+export const updateQuantity = (productId, newQuantity) => {
+  cart.forEach((cartItem) => {
+    if (cartItem.productId === productId) {
+      cartItem.quantity = newQuantity;
+    }
+  });
+  // to update localStorage
+  saveToStorage();
+};

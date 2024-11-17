@@ -1,8 +1,20 @@
-import { cart, removeFromCart } from "../data/cart.js";
+import { cart, removeFromCart, updateQuantity } from "../data/cart.js";
 import { products } from "../data/products.js";
 import { formatCurrency } from "./utils/money.js";
 
 let cartSummaryHTML = "";
+
+const updateCheckoutCartQuantity = () => {
+  let cart = JSON.parse(localStorage.getItem("cart"));
+  let cartQuantity = 0;
+  cart.forEach((cartItem) => {
+    cartQuantity += cartItem.quantity;
+  });
+  // add cart quantity to page (in checkout)
+  document.querySelector(
+    ".js-checkout-header-middle-section"
+  ).innerHTML = `Checkout (${cartQuantity} items)`;
+};
 
 cart.forEach((cartItem) => {
   const productId = cartItem.productId;
@@ -33,11 +45,21 @@ cart.forEach((cartItem) => {
               matchingProduct.priceCents
             )}</div>
             <div class="product-quantity">
-                <span> Quantity: <span class="quantity-label">${
-                  cartItem.quantity
-                }</span> </span>
-                <span class="update-quantity-link link-primary">
+                <span> Quantity: <span class="quantity-label js-quantity-label-${
+                  matchingProduct.id
+                }">${cartItem.quantity}</span> </span>
+                <span class="update-quantity-link link-primary js-update-link" data-product-id=${
+                  matchingProduct.id
+                }>
                 Update
+                </span>
+                <input type="number" min="0" class="input-quantity-link js-input-quantity-link-${
+                  matchingProduct.id
+                }" />
+                <span class="save-quantity-link link-primary js-save-quantity-link" data-product-id="${
+                  matchingProduct.id
+                }">
+                Save
                 </span>
                 <span class="delete-quantity-link link-primary js-delete-link" data-product-id="${
                   matchingProduct.id
@@ -92,6 +114,7 @@ cart.forEach((cartItem) => {
         </div>
     </div>
     `;
+  updateCheckoutCartQuantity();
 });
 
 // display data saved inside cartSummaryHTML
@@ -106,5 +129,46 @@ document.querySelectorAll(".js-delete-link").forEach((link) => {
     );
     // .remove() will remove it from the page (every element we get from DOM has .remove() method)
     container.remove();
+    updateCheckoutCartQuantity();
+  });
+});
+
+document.querySelectorAll(".js-update-link").forEach((link) => {
+  const productId = link.dataset.productId;
+  link.addEventListener("click", () => {
+    const container = document.querySelector(
+      `.js-cart-item-container-${productId}`
+    );
+    container.classList.add("is-editing-quantity");
+  });
+});
+
+document.querySelectorAll(".js-save-quantity-link").forEach((save) => {
+  save.addEventListener("click", () => {
+    // do the opposite of "Update"
+    const productId = save.dataset.productId;
+
+    // productId used for specific element (container with it's own id, input with it's own id, quantityLabel with it's own id...)
+    const container = document.querySelector(
+      `.js-cart-item-container-${productId}`
+    );
+    const inputLink = document.querySelector(
+      `.js-input-quantity-link-${productId}`
+    );
+    const inputLinkValue = Number(inputLink.value); // convert to number
+
+    // update quantity value
+    updateQuantity(productId, inputLinkValue);
+
+    // update quantity html on checkout products
+    const quantityLabel = document.querySelector(
+      `.js-quantity-label-${productId}`
+    );
+    quantityLabel.innerHTML = inputLinkValue;
+
+    // update checkout in the header
+    updateCheckoutCartQuantity();
+
+    container.classList.remove("is-editing-quantity");
   });
 });
