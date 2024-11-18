@@ -77,3 +77,20 @@ export const updateQuantity = (productId, newQuantity) => {
   // to update localStorage
   saveToStorage();
 };
+
+export const updateDeliveryOption = (productId, deliveryOptionId) => {
+  // loop through the cart to find a product and update the deliveryOptionId of the product
+
+  // find product
+  let matchingItem; // to save matching item and to figure out if item exists
+  cart.forEach((cartItem) => {
+    if (productId === cartItem.productId) {
+      matchingItem = cartItem;
+    }
+  });
+
+  matchingItem.deliveryOptionId = deliveryOptionId;
+
+  // we have updated cart so we need to save it in localStorage
+  saveToStorage();
+};
