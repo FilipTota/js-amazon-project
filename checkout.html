@@ -87,5 +87,19 @@
       </div>
     </div>
   </body>
+
+  <!-- load function from external library -->
+  <!-- <script src="https://unpkg.com/supersimpledev@1.0.1/hello.js"></script> -->
+
+  <!-- external library for calculating dates, this is a compressed js code, the reason it is compressed is that it loads faster to our code, this process of compresion is called minification -->
+  <!-- <script src="https://unpkg.com/dayjs@1.11.10/dayjs.min.js"></script> -->
+  <!-- this dayjs library creates a function called dayjs() that we will be using in our checkout.js file-->
+
+  <!-- better way to load external libraries is to use modules -->
+  <!-- so we will be using ESM version -->
+  <!-- ESM = EcmaScript Modules --- EcmaScript = JavaScript -->
+  <!-- ESM version of a library is just a version that works with JavaScript Modules -->
+  <!-- Example of importing hello() and dayjs() from ESM library inside checkout.js file -->
+
   <script src="js/checkout.js" type="module"></script>
 </html>

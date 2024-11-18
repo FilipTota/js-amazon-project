@@ -1,11 +1,33 @@
 import { cart, removeFromCart, updateQuantity } from "../data/cart.js";
 import { products } from "../data/products.js";
 import { formatCurrency } from "./utils/money.js";
+import { deliveryOptions } from "../data/deliveryOptions.js";
+import { hello } from "https://unpkg.com/supersimpledev@1.0.1/hello.esm.js";
+
+// export with a curly brackets is called Named export
+
+// default export syntax (without curly brackets), we can use it when we want to export only one thing from a file
+// default export example inside money.js file
+import dayjs from "https://unpkg.com/dayjs@1.11.10/esm/index.js";
+
+// function from external library
+hello();
+
+// dayjs external library
+const today = dayjs();
+console.log("today :>> ", today);
+
+// get date in 7 days from today
+const deliveryDate = today.add(7, "days");
+console.log("deliveryDate :>> ", deliveryDate);
+
+// get fromatted date according to the string of tokens passed in
+const formatedDeliveryDate = deliveryDate.format("dddd, MMMM D"); // Monday, November 25
+console.log("formatedDeliveryDate :>> ", formatedDeliveryDate);
 
 let cartSummaryHTML = "";
 
 const updateCheckoutCartQuantity = () => {
-  let cart = JSON.parse(localStorage.getItem("cart"));
   let cartQuantity = 0;
   cart.forEach((cartItem) => {
     cartQuantity += cartItem.quantity;
@@ -14,6 +36,44 @@ const updateCheckoutCartQuantity = () => {
   document.querySelector(
     ".js-checkout-header-middle-section"
   ).innerHTML = `Checkout (${cartQuantity} items)`;
+};
+
+const deliveryOptionsHTML = (matchingProduct, cartItem) => {
+  let html = "";
+
+  deliveryOptions.forEach((deliveryOption) => {
+    const today = dayjs();
+    // calculate delivery date based on the deliveryOptions.js
+    const deliveryDate = today.add(deliveryOption.deliveryDays, "days");
+    // format date to a wanted string
+    const dateString = deliveryDate.format("dddd, MMMM D");
+    // calculate price
+    const priceString =
+      deliveryOption.priceCents === 0
+        ? "FREE Shipping"
+        : `$${formatCurrency(deliveryOption.priceCents)}`;
+
+    // only be checked if deliveriOption.id is equal to cartItem.deliveryOptionId
+    const isChecked = deliveryOption.id === cartItem.deliveryOptionId;
+
+    html += `
+      <div class="delivery-option">
+          <input type="radio"
+            ${isChecked ? "checked" : ""}
+            class="delivery-option-input"
+            name="delivery-option-${
+              matchingProduct.id /* delivery option with product id because we want be able to select delivery option for each product in a cart...if we have input radio name with the same name value for every product then all of this will be shared*/
+            }}"
+          />
+          <div>
+            <div class="delivery-option-date">${dateString}</div>
+            <div class="delivery-option-price">${priceString}</div>
+          </div>
+      </div>
+    `;
+  });
+
+  return html;
 };
 
 cart.forEach((cartItem) => {
@@ -27,11 +87,29 @@ cart.forEach((cartItem) => {
       // by having a matvhing product we can access image, name, price... that we can use to generate this html bellow
     }
   });
+
+  const deliveryOptionId = cartItem.deliveryOptionId;
+
+  // to store delivery option result
+  let deliveryOption;
+  // loop through delivery options to find
+  deliveryOptions.forEach((option) => {
+    if (option.id === deliveryOptionId) {
+      deliveryOption = option;
+    }
+  });
+
+  const today = dayjs();
+  // calculate delivery date based on the deliveryOptions.js
+  const deliveryDate = today.add(deliveryOption.deliveryDays, "days");
+  // format date to a wanted string
+  const dateString = deliveryDate.format("dddd, MMMM D");
+
   cartSummaryHTML += `
     <div class="cart-item-container js-cart-item-container-${
       matchingProduct.id
     }">
-        <div class="delivery-date">Delivery date: Wednesday, June 15</div>
+        <div class="delivery-date">Delivery date: ${dateString}</div>
 
         <div class="cart-item-details-grid">
             <img
@@ -73,43 +151,7 @@ cart.forEach((cartItem) => {
             <div class="delivery-options-title">
                 Choose a delivery option:
             </div>
-
-            <div class="delivery-option">
-                <input
-                type="radio"
-                class="delivery-option-input"
-                name="delivery-option-${
-                  matchingProduct.id /* delivery option with product id because we want be able to select delivery option for each product in a cart...if we have input radio name with the same name value for every product then all of this will be shared*/
-                }}"
-                />
-                <div>
-                <div class="delivery-option-date">Tuesday, June 21</div>
-                <div class="delivery-option-price">FREE Shipping</div>
-                </div>
-            </div>
-            <div class="delivery-option">
-                <input
-                type="radio"
-                checked
-                class="delivery-option-input"
-                name="delivery-option-${matchingProduct.id}}"
-                />
-                <div>
-                <div class="delivery-option-date">Wednesday, June 15</div>
-                <div class="delivery-option-price">$4.99 - Shipping</div>
-                </div>
-            </div>
-            <div class="delivery-option">
-                <input
-                type="radio"
-                class="delivery-option-input"
-                name="delivery-option-${matchingProduct.id}}"
-                />
-                <div>
-                <div class="delivery-option-date">Monday, June 13</div>
-                <div class="delivery-option-price">$9.99 - Shipping</div>
-                </div>
-            </div>
+                ${deliveryOptionsHTML(matchingProduct, cartItem)}
             </div>
         </div>
     </div>
