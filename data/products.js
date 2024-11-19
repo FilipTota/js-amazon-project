@@ -1,3 +1,15 @@
+export const getProduct = (productId) => {
+  // find mathing product (firt cart item inside products from product.js)
+  let matchingProduct;
+  products.forEach((product) => {
+    if (product.id === productId) {
+      matchingProduct = product;
+      // by having a matvhing product we can access image, name, price... that we can use to generate this html bellow
+    }
+  });
+  return matchingProduct;
+};
+
 export const products = [
   {
     id: "e43638ce-6aa0-4b85-b27f-e1d07eb678c6",
