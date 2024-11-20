@@ -10,6 +10,7 @@ import {
   deliveryOptions,
   getDeliveryOption,
 } from "../../data/deliveryOptions.js";
+import { renderPaymentSummary } from "./paymentSummary.js";
 // import { hello } from "https://unpkg.com/supersimpledev@1.0.1/hello.esm.js";
 
 // export with a curly brackets is called Named export
@@ -170,6 +171,9 @@ export const renderOrderSummary = () => {
       // .remove() will remove it from the page (every element we get from DOM has .remove() method)
       container.remove();
       updateCheckoutCartQuantity();
+
+      // on delete rerender PaymentSummary
+      renderPaymentSummary();
     });
   });
 
@@ -209,6 +213,9 @@ export const renderOrderSummary = () => {
       // update checkout in the header
       updateCheckoutCartQuantity();
 
+      // on save rerender PaymentSummary
+      renderPaymentSummary();
+
       container.classList.remove("is-editing-quantity");
     });
   });
@@ -230,6 +237,9 @@ export const renderOrderSummary = () => {
       // Controller - runs some code when we interact with the page (for example event listeners)
       // we use MVC to make sure that the page always matches the data
       renderOrderSummary();
+
+      // on delivery chane rrerender PaymentSummary
+      renderPaymentSummary();
 
       // function can call/re-run itself
       // this feature is called recursion
