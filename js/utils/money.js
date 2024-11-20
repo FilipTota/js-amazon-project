@@ -1,6 +1,7 @@
 export const formatCurrency = (priceCents) => {
   // convert cents to dollars and set it to two decimals
-  return (priceCents / 100).toFixed(2);
+  return (Math.round(priceCents) / 100).toFixed(2);
+  // .toFixed have some issues with rounding so we added Math.round() to price first and then .toFixed(2)
 };
 
 // default export example
