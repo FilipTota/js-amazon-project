@@ -9,15 +9,18 @@ import { formatCurrency } from "../utils/money.js";
 import {
   deliveryOptions,
   getDeliveryOption,
+  calculateDeliveryDate,
 } from "../../data/deliveryOptions.js";
 import { renderPaymentSummary } from "./paymentSummary.js";
+import { renderCheckoutHeader } from "./checkoutHeader.js";
+
+// Additional exercises import
+import { isWeekend as isSatSun } from "./paymentSummary.js";
 // import { hello } from "https://unpkg.com/supersimpledev@1.0.1/hello.esm.js";
 
 // export with a curly brackets is called Named export
-
 // default export syntax (without curly brackets), we can use it when we want to export only one thing from a file
 // default export example inside money.js file
-import dayjs from "https://unpkg.com/dayjs@1.11.10/esm/index.js";
 
 // // function from external library
 // hello();
@@ -38,26 +41,15 @@ import dayjs from "https://unpkg.com/dayjs@1.11.10/esm/index.js";
 export const renderOrderSummary = () => {
   let cartSummaryHTML = "";
 
-  const updateCheckoutCartQuantity = () => {
-    let cartQuantity = 0;
-    cart.forEach((cartItem) => {
-      cartQuantity += cartItem.quantity;
-    });
-    // add cart quantity to page (in checkout)
-    document.querySelector(
-      ".js-checkout-header-middle-section"
-    ).innerHTML = `Checkout (${cartQuantity} items)`;
-  };
+  renderCheckoutHeader();
 
   const deliveryOptionsHTML = (matchingProduct, cartItem) => {
     let html = "";
 
     deliveryOptions.forEach((deliveryOption) => {
-      const today = dayjs();
-      // calculate delivery date based on the deliveryOptions.js
-      const deliveryDate = today.add(deliveryOption.deliveryDays, "days");
-      // format date to a wanted string
-      const dateString = deliveryDate.format("dddd, MMMM D");
+      // calculate delivery date
+      const dateString = calculateDeliveryDate(deliveryOption);
+
       // calculate price
       const priceString =
         deliveryOption.priceCents === 0
@@ -98,11 +90,8 @@ export const renderOrderSummary = () => {
     const deliveryOptionId = cartItem.deliveryOptionId;
     const deliveryOption = getDeliveryOption(deliveryOptionId);
 
-    const today = dayjs();
-    // calculate delivery date based on the deliveryOptions.js
-    const deliveryDate = today.add(deliveryOption.deliveryDays, "days");
-    // format date to a wanted string
-    const dateString = deliveryDate.format("dddd, MMMM D");
+    // calculate delivery date
+    const dateString = calculateDeliveryDate(deliveryOption);
 
     cartSummaryHTML += `
       <div class="cart-item-container js-cart-item-container-${
@@ -155,7 +144,7 @@ export const renderOrderSummary = () => {
           </div>
       </div>
       `;
-    updateCheckoutCartQuantity();
+    renderCheckoutHeader();
   });
 
   // display data saved inside cartSummaryHTML
@@ -165,12 +154,16 @@ export const renderOrderSummary = () => {
     link.addEventListener("click", () => {
       const productId = link.dataset.productId;
       removeFromCart(productId);
-      const container = document.querySelector(
-        `.js-cart-item-container-${productId}`
-      );
-      // .remove() will remove it from the page (every element we get from DOM has .remove() method)
-      container.remove();
-      updateCheckoutCartQuantity();
+      // const container = document.querySelector(
+      //   `.js-cart-item-container-${productId}`
+      // );
+      // // .remove() will remove it from the page (every element we get from DOM has .remove() method)
+      // container.remove();
+
+      // update page with MVC and not with DOM like commented code above
+      renderOrderSummary();
+
+      renderCheckoutHeader();
 
       // on delete rerender PaymentSummary
       renderPaymentSummary();
@@ -211,7 +204,7 @@ export const renderOrderSummary = () => {
       quantityLabel.innerHTML = inputLinkValue;
 
       // update checkout in the header
-      updateCheckoutCartQuantity();
+      renderCheckoutHeader();
 
       // on save rerender PaymentSummary
       renderPaymentSummary();
@@ -247,3 +240,42 @@ export const renderOrderSummary = () => {
     });
   });
 };
+
+// Additional exercises
+import dayjs from "https://unpkg.com/dayjs@1.11.10/esm/index.js";
+const today = dayjs();
+console.log("today :>> ", today);
+
+// get date 5 days after today
+const fiveDaysAfterToday = today.add(5, "days");
+console.log("fiveDaysAfterToday :>> ", fiveDaysAfterToday);
+
+// dispplay it in format '<Month> <Day of Month>'
+const formatedDate = fiveDaysAfterToday.format("MMMM DD");
+console.log("formatedDate :>> ", formatedDate);
+
+// calculate 1 month after today and display it in the same format as above
+const monthAfterToday = today.add(1, "month").format("MMMM DD");
+console.log("monthAfterToday :>> ", monthAfterToday);
+
+// calculate one month before today and display it in the same format as above
+const monthBeforeToday = today.subtract(1, "month").format("MMMM DD");
+console.log("monthBeforeToday :>> ", monthBeforeToday);
+
+// get a date and disply it in this format: <Day of Week>
+const dayOfWeek = today.format("dddd");
+console.log("dayOfWeek :>> ", dayOfWeek);
+
+// create function that takes a DayJS object and returns whether the date is Saturday of Sunday
+// const isWeekend = (date) => {
+//   // const dayOfWeek = today.format("dddd");
+//   const dayOfWeek = date.add(3, "days").format("dddd");
+//   if (dayOfWeek === "Saturday" || dayOfWeek === "Sunday") return "Weekend";
+//   return dayOfWeek;
+// };
+// console.log("isWeekend(today) :>> ", isWeekend(today));
+
+// place isWeekend() in other file and export it here
+// console.log("isWeekend(today) :>> ", isWeekend(today));
+// change iwWeekend name with import above
+console.log("isSatSun(today) :>> ", isSatSun(today));

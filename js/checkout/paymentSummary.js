@@ -80,3 +80,12 @@ export const renderPaymentSummary = () => {
   `;
   document.querySelector(".js-payment-summary").innerHTML = paymentSummaryHTML;
 };
+
+// Additional exercises
+export const isWeekend = (date) => {
+  if (date) {
+    const dayOfWeek = date.add(3, "days").format("dddd");
+    if (dayOfWeek === "Saturday" || dayOfWeek === "Sunday") return "Weekend";
+    return dayOfWeek;
+  }
+};
