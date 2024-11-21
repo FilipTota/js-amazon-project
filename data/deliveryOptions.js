@@ -31,16 +31,30 @@ export const getDeliveryOption = (deliveryOptionId) => {
   return deliveryOption || deliveryOptions[0]; // adding default value to be safe
 };
 
+// function to check is given date is Saturday or Sunday
+const isWeekend = (date) => {
+  const dayOfWeek = date.format("dddd");
+  return dayOfWeek === "Saturday" || dayOfWeek === "Sunday";
+};
+
+// calcualte delivery days but skip weekend (Saturday & Sunday)
+// Example: if today is Friday, and we choose 1 day delivery date, we wont get this delivery on Saturday, we will skip weekend and get delivery on Monday
 export const calculateDeliveryDate = (deliveryOption) => {
   // get todays date
-  const today = dayjs();
+  let deliveryDate = dayjs();
+  // get delivery days saved as remaining days because we will drecrease delivery days with each loop (if it is not weekend)
+  let remainingDays = deliveryOption.deliveryDays;
 
-  // calculate delivery date based on the deliveryOptions variable
-  const deliveryDate = today.add(deliveryOption.deliveryDays, "days");
-  // console.log("deliveryDate :>> ", deliveryDate);
+  while (remainingDays > 0) {
+    // add one day to today if is not weekend
+    deliveryDate = deliveryDate.add(1, "days");
+    // decrease remaining days if date is not weekend (Saturday or Sunday)
+    // not decreasing on weekend because we want to skip it
+    if (!isWeekend(deliveryDate)) remainingDays--;
+  }
 
   // format date to a wanted string
-  const dateString = deliveryDate.format("dddd, MMMM D");
+  let dateString = deliveryDate.format("dddd, MMMM D");
   // console.log("dateString :>> ", dateString);
 
   return dateString;
