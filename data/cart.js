@@ -1,18 +1,26 @@
 // get cart data from localStorage
-export let cart = JSON.parse(localStorage.getItem("cart"));
-if (!cart) {
-  cart = [
-    {
-      productId: "e43638ce-6aa0-4b85-b27f-e1d07eb678c6",
-      quantity: 2,
-      deliveryOptionId: "1",
-    },
-    {
-      productId: "15b6fc6f-327a-4ec4-896f-486349e85a3d",
-      quantity: 1,
-      deliveryOptionId: "2",
-    },
-  ];
+export let cart;
+
+// to Mock this data inside test file
+// when we load this file, we need to run this function so that we run this code at least once
+loadFromStorage();
+
+export function loadFromStorage() {
+  cart = JSON.parse(localStorage.getItem("cart"));
+  if (!cart) {
+    cart = [
+      {
+        productId: "e43638ce-6aa0-4b85-b27f-e1d07eb678c6",
+        quantity: 2,
+        deliveryOptionId: "1",
+      },
+      {
+        productId: "15b6fc6f-327a-4ec4-896f-486349e85a3d",
+        quantity: 1,
+        deliveryOptionId: "2",
+      },
+    ];
+  }
 }
 
 // best practice is to have all the related code inside one file
