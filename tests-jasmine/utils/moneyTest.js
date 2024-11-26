@@ -1,7 +1,7 @@
 import { formatCurrency } from "../../js/utils/money.js";
 
 // create test suite
-describe("test suite: formatCurrency", () => {
+describe("Test suite: formatCurrency", () => {
   // to create a test in jasmine we will use it() function
   it("converts cents into dollars", () => {
     expect(formatCurrency(2095)).toEqual("20.95");

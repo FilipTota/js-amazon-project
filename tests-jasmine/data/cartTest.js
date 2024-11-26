@@ -1,6 +1,8 @@
+// Unit Test -> testing 1 piece of the code
+
 import { addToCart, cart, loadFromStorage } from "../../data/cart.js";
 
-describe("test suite: add to cart", () => {
+describe("Test suite: add to cart", () => {
   // test for when the product is already in the cart
   it("adds an existing product to the cart", () => {
     // a mock only last for 1 test, once this test is finnished the method is no longer mocked
