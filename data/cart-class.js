@@ -18,23 +18,25 @@ class Cart {
 
     // now that we have constructor we can place this code inside, but like this:
     this.localStorageKey = localStorageKey; // constructor parameter .... how do we save value into this parameter? (code where we generate object, bottom of the page)
-    this.loadFromStorage();
+    this.#loadFromStorage();
     // this. points to the object that we generate
   }
 
   // adding property to a class (instead of cartItems: undefined, "like in object" in class we will use cartItems = underfined;)
-  cartItems = undefined; // and with that, every object that we generate will have this property
+  //   cartItems = undefined; // and with that, every object that we generate will have this property
   // new propery of localStorageKey:
-  localStorageKey = undefined;
+  //   localStorageKey = undefined;
 
   // same as code above (where there values are set to undefined)
-  //  cartItems;
-  //  localStorageKey;
+  cartItems;
+  #localStorageKey; // adding # to make localStorageKey private (to prevent it from using/changing it from outside of the class)
+  // when a propery is private, it means that it can only be used inside this class (we can't change it outside this class (example: cart.localStorageKey = 'something'))
+  // propery without a # infront is called public property and it can be accessed anywhere
 
   // now lets move methods inside this class:
-  loadFromStorage() {
+  #loadFromStorage() {
     // every object we generate will have this method
-    this.cartItems = JSON.parse(localStorage.getItem(this.localStorageKey));
+    this.cartItems = JSON.parse(localStorage.getItem(this.#localStorageKey));
     // this. will give us the outer object (in our example this. is equal to cart.)
     // if the name of the object gets changed (const cart), we dont have to change cart.something throughout the code because we use this.something
     // code will always work, doesn't matter what the name of the object variable is
@@ -54,7 +56,7 @@ class Cart {
     }
   }
   saveToStorage() {
-    localStorage.setItem(this.localStorageKey, JSON.stringify(this.cartItems));
+    localStorage.setItem(this.#localStorageKey, JSON.stringify(this.cartItems));
   }
   addToCart(productId, productName, selectedValue) {
     let matchingItem;
