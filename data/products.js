@@ -1,3 +1,5 @@
+import { formatCurrency } from "../js/utils/money.js";
+
 export const getProduct = (productId) => {
   // find mathing product (firt cart item inside products from product.js)
   let matchingProduct;
@@ -9,6 +11,31 @@ export const getProduct = (productId) => {
   });
   return matchingProduct;
 };
+
+// converting an object into a class:
+class Product {
+  id;
+  image;
+  name;
+  rating;
+  priceCents;
+  constructor(productDetails) {
+    this.id = productDetails.id;
+    this.image = productDetails.image;
+    this.name = productDetails.name;
+    this.rating = productDetails.rating;
+    this.priceCents = productDetails.priceCents;
+  }
+
+  // this two methods will be used to
+  getStartsUrl() {
+    // used inside amazon.js file in product-rating-container
+    return `images/ratings/rating-${this.rating.stars * 10}.png`;
+  }
+  getPrice() {
+    return `$${formatCurrency(this.priceCents)}`;
+  }
+}
 
 export const products = [
   {
@@ -503,4 +530,9 @@ export const products = [
     priceCents: 1599,
     keywords: ["sweaters", "hoodies", "apparel", "mens"],
   },
-];
+  // we will use .map to convert every product inside products to a class
+  // .map creates a new array
+].map((productDetails) => {
+  // and whatever we return from this inner function is gonna go inside that new array
+  return new Product(productDetails);
+});
