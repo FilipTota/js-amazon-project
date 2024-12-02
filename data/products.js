@@ -71,6 +71,46 @@ class Clothing extends Product {
   // one thing to note, if we don't create constructor, by defaul, it will run the parents constructor
 }
 
+// Built in classes
+// example: new Date()
+// const date = new Date(); // gets current date
+// console.log("date :>> ", date);
+// console.log("date.toLocaleTimeString() :>> ", date.toLocaleTimeString());
+
+// in JavaScript .this can be used anywhere in the code
+// example:
+// console.log("this :>> ", this);
+// // when creating an object:
+// const obj2 = {
+//   a: 2,
+//   b: this.a, // obj2 han not been created yet, so this. doesn't have anything to point to and this will be undefined
+// };
+
+// using this. inside function:
+function logThis() {
+  console.log("this :>> ", this);
+}
+// not inside of any object, so there's nothing for "this" to point to
+// this = undefined
+logThis();
+// inside function, we can change "this" to whatever we want
+// functions have method called .call()
+logThis.call();
+// .call() calls the function, same as calling a function with just function name (logThis()) except we can set the value of "this" to whatewer we want:
+// whatever we pass into call method as a first parameter, this parameter will be value of "this"
+logThis.call("hello"); // this = hello
+
+// arrow function do not change the value of "this":
+this;
+const obj3 = {
+  method: () => {
+    console.log("this :>> ", this);
+    // "this" will have the same value as outside the arrow function
+    //  "this" keeps the value that it had outside the arrow function
+  },
+};
+obj3.method();
+
 export const products = [
   {
     id: "e43638ce-6aa0-4b85-b27f-e1d07eb678c6",
