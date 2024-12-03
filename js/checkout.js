@@ -4,6 +4,8 @@ import { renderPaymentSummary } from "./checkout/paymentSummary.js";
 // import "../data/cart-class.js"; // this just run all the code inside this file without importing anything
 // we were using this import for practice
 
+import "../data/car.js";
+
 // to load everything on first load
 renderOrderSummary();
 renderPaymentSummary();
