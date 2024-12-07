@@ -2,14 +2,27 @@
 
 // get from another file:
 import { cart, addToCart } from "../data/cart.js";
-import { products } from "../data/products.js";
+import { products, loadProducts } from "../data/products.js";
 import { formatCurrency } from "./utils/money.js";
 
-// to combine all this html together
-let productsHtml = "";
+// load products first
+loadProducts(renderProductsGrid);
+// remember: http requests are asynchronous (loadProduct will send request to backend but it takes time for the request to return response)
+// it will send the request and to the rest of tke code below, response has not loaded yet, so porducts are not loaded yet
+// products is still empty
+// to solve this problem, we need to wait for the http request to finish first and for the response to come back
+// and then we can run the rest of the code
 
-products.forEach((product) => {
-  productsHtml += `
+// to render code on our page, we will put the code bellow inside renderProductsGrid function and pass this function inside loadProduct as a parameter
+
+// function that we provide to loadProducts is called callback (we are giving the function to run in the future/call in the future)
+
+function renderProductsGrid() {
+  // to combine all this html together
+  let productsHtml = "";
+
+  products.forEach((product) => {
+    productsHtml += `
     <div class="product-container">
         <div class="product-image-container">
             <img
@@ -63,67 +76,68 @@ products.forEach((product) => {
         }" data-product-id="${product.id}">Add to Cart</button>
     </div>
   `;
-});
-
-document.querySelector(".js-products-grid").innerHTML = productsHtml;
-
-// this function will not be moved to cart.js because it is updating the page where the cart is displyed and not the actual cart
-export const updateCartQuantity = () => {
-  // update total cart quantity
-  let cartQuantity = 0;
-  cart.forEach((cartItem) => {
-    cartQuantity += cartItem.quantity;
   });
-  // add cart quantity to page (in shopping cart)
-  document.querySelector(".js-cart-quantity").innerHTML = cartQuantity;
-};
 
-const displayMessageAdded = () => {
-  // to prevent message being shown and disapearing quickly after one more press of add to cart button
-  clearTimeout(timeoutId);
+  document.querySelector(".js-products-grid").innerHTML = productsHtml;
 
-  // show message added
-  const messageAdded = document.querySelector(`.js-added-to-cart`);
-  messageAdded.classList.add(`added-to-cart-visible`);
+  // this function will not be moved to cart.js because it is updating the page where the cart is displyed and not the actual cart
+  const updateCartQuantity = () => {
+    // update total cart quantity
+    let cartQuantity = 0;
+    cart.forEach((cartItem) => {
+      cartQuantity += cartItem.quantity;
+    });
+    // add cart quantity to page (in shopping cart)
+    document.querySelector(".js-cart-quantity").innerHTML = cartQuantity;
+  };
 
-  timeoutId = setTimeout(() => {
-    messageAdded.classList.remove("added-to-cart-visible");
-  }, 2000);
-};
+  const displayMessageAdded = () => {
+    // to prevent message being shown and disapearing quickly after one more press of add to cart button
+    clearTimeout(timeoutId);
 
-let timeoutId;
-document.querySelectorAll(".js-add-to-cart").forEach((button) => {
-  button.addEventListener("click", () => {
-    // add product to a cart
-    // we can just push product object with data we want to load
-    // however, when we clik this button how will we know whict product to add?
-    // to solve this product we are gonna learn a feature of html called Data Attribute
+    // show message added
+    const messageAdded = document.querySelector(`.js-added-to-cart`);
+    messageAdded.classList.add(`added-to-cart-visible`);
 
-    // Data Attribute is jus another html attribute
-    // the purpose of data attribute is to attach any information to an element
-    // exampele of data-attribute is in add to cart button above
-    // we add data attribute after the class attribute
+    timeoutId = setTimeout(() => {
+      messageAdded.classList.remove("added-to-cart-visible");
+    }, 2000);
+  };
 
-    // Data attributes have to start the name with data-, and then after dash, we can add any name we want (like in the example above -> data-procuct-name)w
+  let timeoutId;
+  document.querySelectorAll(".js-add-to-cart").forEach((button) => {
+    button.addEventListener("click", () => {
+      // add product to a cart
+      // we can just push product object with data we want to load
+      // however, when we clik this button how will we know whict product to add?
+      // to solve this product we are gonna learn a feature of html called Data Attribute
 
-    // .dataset -> gives us all data attributes that are attaced to this button
-    // const productName = button.dataset.productName;
-    // const productId = button.dataset.productId;
+      // Data Attribute is jus another html attribute
+      // the purpose of data attribute is to attach any information to an element
+      // exampele of data-attribute is in add to cart button above
+      // we add data attribute after the class attribute
 
-    // destructuring productName and productId
-    // .dataset -> gives us all data attributes that are attaced to this button
-    const { productId, productName } = button.dataset;
+      // Data attributes have to start the name with data-, and then after dash, we can add any name we want (like in the example above -> data-procuct-name)w
 
-    const selectElement = document.querySelector(
-      `.js-quantity-selector-${productId}`
-    );
-    const selectedValue = selectElement.value;
+      // .dataset -> gives us all data attributes that are attaced to this button
+      // const productName = button.dataset.productName;
+      // const productId = button.dataset.productId;
 
-    // to clean our code
-    addToCart(productId, productName, selectedValue);
-    updateCartQuantity();
-    displayMessageAdded();
+      // destructuring productName and productId
+      // .dataset -> gives us all data attributes that are attaced to this button
+      const { productId, productName } = button.dataset;
+
+      const selectElement = document.querySelector(
+        `.js-quantity-selector-${productId}`
+      );
+      const selectedValue = selectElement.value;
+
+      // to clean our code
+      addToCart(productId, productName, selectedValue);
+      updateCartQuantity();
+      displayMessageAdded();
+    });
   });
-});
 
-updateCartQuantity();
+  updateCartQuantity();
+}
