@@ -6,6 +6,8 @@ import { renderPaymentSummary } from "./checkout/paymentSummary.js";
 
 import "../data/car.js";
 
+import "../data/backend-practice.js";
+
 // to load everything on first load
 renderOrderSummary();
 renderPaymentSummary();
