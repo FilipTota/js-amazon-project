@@ -6,6 +6,9 @@
 import { renderOrderSummary } from "../../js/checkout/orderSummary.js";
 import { loadFromStorage, cart } from "../../data/cart.js";
 
+// add loadProducts
+import { loadProducts } from "../../data/products.js";
+
 describe("Test suite: renderOrderSummary", () => {
   // renderOrderSummary loads a page (one section of the page)
   // when we are testing a page we need to test two things:
@@ -24,6 +27,17 @@ describe("Test suite: renderOrderSummary", () => {
   // afterAll() -> runs code after all tests
 
   // before each test we do some code setup, and with hooks we can share the code between our two tests
+
+  // backend testing
+  beforeAll((done) => {
+    // jasmine has sa feature done() that waits for the code to finish
+    // we need it because loadProducts is asynchronous
+    loadProducts(() => {
+      done();
+    });
+    // with done, beforeAll will not automaticaly go to the next step, it will just wait
+    // and it will only go to the next step after we call this done() function
+  });
 
   beforeEach(() => {
     // beforeEach Hook
