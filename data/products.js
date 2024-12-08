@@ -23,7 +23,6 @@ export const loadProductsFetch = () => {
     })
     .then((productsData) => {
       // when response.json() finishes, it will give us the data that is attached to the response and it's gonna save it inside the parameter of .then "productsData"
-      console.log("productsData :>> ", productsData);
 
       products = productsData.map((productDetails) => {
         if (productDetails.type === "clothing") {

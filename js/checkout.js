@@ -14,7 +14,53 @@ import { loadCart } from "../data/cart.js";
 // Backend practice
 // import "../data/backend-practice.js";
 
+//--------------------------------------------------------------------------------------------------------------//
+// Async await
+
+// -> even better way to handel asynchronous code
+// -> async await is a shortcut for promises
+// -> makes a code a lot cleaner
+
+const loadPage = async () => {
+  // async makes a function return a promise
+  // it basically wraps this console.log code in a promise
+
+  await loadProductsFetch();
+  // await loadCart(); -> await await only works with promises, it doesn't do anything with callback
+  await new Promise((resolve) => {
+    loadCart(() => {
+      resolve();
+    });
+  });
+
+  // const value = await new Promise((resolve) => {
+  //   loadCart(() => {
+  //     resolve("value1");
+  //     // value1 will be saved inside value variable
+  //   });
+  // });
+  // console.log("value :>> ", value);
+
+  // after we load products and cart, we are gonna render the page:
+  renderOrderSummary();
+  renderPaymentSummary();
+
+  // if we return something inside this function
+  // return "value2";
+  // return 'value2' gets converted to resolve('value2') -> return 'value2' = resolve('value2')
+};
+loadPage();
+// .then((value) => {
+//   console.log("next step");
+//   // 'value 2' will be saved inside value parameters
+//   console.log("value :>> ", value);
+// });
+// async lets us use await
+// await lets us wait for a promise to finish before going to the next line
+
+//--------------------------------------------------------------------------------------------------------------//
 // Promises
+
 // -> better way to handle asynchronous code
 // -> similar to done() function
 // -> let us wait for some code to finish, before going to the next step
@@ -23,6 +69,7 @@ import { loadCart } from "../data/cart.js";
 // Promise.all lets us run mulitple promises at the same time
 // and wait for all of them to finish
 // Promise.all gets an array of promises and to go to next step we will use .then() to render order and payment summary
+/*
 Promise.all([
   // new Promise((resolve) => {
   //   loadProducts(() => {
@@ -43,6 +90,7 @@ Promise.all([
   renderOrderSummary();
   renderPaymentSummary();
 });
+*/
 
 /*
 new Promise((resolve) => {
@@ -107,3 +155,4 @@ new Promise((resolve) => {
 //     renderPaymentSummary();
 //   });
 // });
+//--------------------------------------------------------------------------------------------------------------//
