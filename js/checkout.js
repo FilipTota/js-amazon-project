@@ -25,25 +25,44 @@ const loadPage = async () => {
   // async makes a function return a promise
   // it basically wraps this console.log code in a promise
 
-  await loadProductsFetch();
-  // await loadCart(); -> await await only works with promises, it doesn't do anything with callback
-  await new Promise((resolve) => {
-    loadCart(() => {
-      resolve();
+  // to catch errors in async await:
+  try {
+    // we can also use try catch with synchronous code/normal code
+
+    // we can manually create an error using throw
+    // throw "error1";
+
+    await loadProductsFetch();
+    // await loadCart(); -> await await only works with promises, it doesn't do anything with callback
+    await new Promise((resolve, reject) => {
+      // if we want to manually create an error inside promise:
+      // throw "error2"; // this error wil go inside .catch() of promise, unless we have await promise, then it wil be thrown inside catch{}
+
+      // second way of creating an error in promise is by creating a error in the future
+      // throw doesn't work in the future
+      // so if we want to create an error in the future (inside the function of loadCart)
+      // we can use feature of a promise called reject
+      loadCart(() => {
+        // reject("error3"); // reject is a function that lets us create an error in the future (asynchronously)
+        // it created an error in the future (asynchronously) and it goes to catch{}
+        resolve();
+      });
     });
-  });
+    // const value = await new Promise((resolve) => {
+    //   loadCart(() => {
+    //     resolve("value1");
+    //     // value1 will be saved inside value variable
+    //   });
+    // });
+    // console.log("value :>> ", value);
 
-  // const value = await new Promise((resolve) => {
-  //   loadCart(() => {
-  //     resolve("value1");
-  //     // value1 will be saved inside value variable
-  //   });
-  // });
-  // console.log("value :>> ", value);
-
-  // after we load products and cart, we are gonna render the page:
-  renderOrderSummary();
-  renderPaymentSummary();
+    // after we load products and cart, we are gonna render the page:
+    renderOrderSummary();
+    renderPaymentSummary();
+  } catch (error) {
+    console.log("error :>> ", error);
+    console.log("Unexpected error. Please try again later.");
+  }
 
   // if we return something inside this function
   // return "value2";

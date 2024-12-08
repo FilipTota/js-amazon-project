@@ -38,6 +38,11 @@ export const loadProductsFetch = () => {
         return new Product(productDetails);
       });
       console.log("load products");
+    })
+    // to catch error in promises:
+    .catch((error) => {
+      console.log("error :>> ", error);
+      console.log("Unexpected error. Please try again later.");
     });
 
   return promise; // we can return promise  out of a function and then keep attaching more steps to that promise
@@ -74,6 +79,13 @@ export const loadProducts = (fun) => {
     // console.log("load products");
 
     fun();
+  });
+
+  // to catch error in callbacks:
+  xhr.addEventListener("error", (error) => {
+    // if we get an error along the way, it's gonna run this function
+    console.log("error :>> ", error);
+    console.log("Unexpected error. Please try again later.");
   });
 
   xhr.open("GET", "https://supersimplebackend.dev/products");
