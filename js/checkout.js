@@ -4,7 +4,7 @@ import { renderPaymentSummary } from "./checkout/paymentSummary.js";
 // import "../data/cart-class.js"; // this just run all the code inside this file without importing anything
 // we were using this import for practice
 
-import { loadProducts } from "../data/products.js";
+import { loadProducts, loadProductsFetch } from "../data/products.js";
 
 import { loadCart } from "../data/cart.js";
 
@@ -24,11 +24,15 @@ import { loadCart } from "../data/cart.js";
 // and wait for all of them to finish
 // Promise.all gets an array of promises and to go to next step we will use .then() to render order and payment summary
 Promise.all([
-  new Promise((resolve) => {
-    loadProducts(() => {
-      resolve("value1");
-    });
-  }),
+  // new Promise((resolve) => {
+  //   loadProducts(() => {
+  //     resolve("value1");
+  //   });
+  // }),
+  // loadProducsFetch already returns a promise and we can use it inside Promise.all()
+  // so all we need to do is to just call loadProductsFetch, we dont need to create new promise
+  // fetch keeps our code cleaner because it can return a promise and we don't need to write all that extra code like with new Promise - loadCart
+  loadProductsFetch(),
   new Promise((resolve) => {
     loadCart(() => {
       resolve("value2");

@@ -1,6 +1,54 @@
 import { formatCurrency } from "../js/utils/money.js";
 
 export let products = [];
+
+// fetch
+// -> a better way to make HTTP requests
+// -> fetch uses promises (unlike XMLHttpRequest, which uses callbacks)
+
+export const loadProductsFetch = () => {
+  // fetch -> built in function that lets us make HTTP request
+  // it will make GET request by default
+  const promise = fetch("https://supersimplebackend.dev/products")
+    .then((response) => {
+      // to get data of the products from the response we will use:
+      // response.json();
+
+      // instead of using a callback to wait for the response, fetch uses a promise to wait for the response
+      // response.json() is asynchronous, it returns a promise
+      // so we need to wait for this promise to finish before we continue to the next step
+      // to do that we will return 'response.json()' promise
+      return response.json();
+      // when we return a promise, it will wait for this promise to finish before going to the next step
+    })
+    .then((productsData) => {
+      // when response.json() finishes, it will give us the data that is attached to the response and it's gonna save it inside the parameter of .then "productsData"
+      console.log("productsData :>> ", productsData);
+
+      products = productsData.map((productDetails) => {
+        if (productDetails.type === "clothing") {
+          return new Clothing(productDetails);
+        }
+        if (
+          // check if productDetails.keywords is array and then if it contains "appliances"
+          Array.isArray(productDetails.keywords) &&
+          productDetails.keywords.includes("appliances")
+        ) {
+          return new Appliance(productDetails);
+        }
+        return new Product(productDetails);
+      });
+      console.log("load products");
+    });
+
+  return promise; // we can return promise  out of a function and then keep attaching more steps to that promise
+  // like in the code below
+};
+
+// loadProductsFetch().then(() => {
+//   console.log("next step");
+// });
+
 // load products from backend
 export const loadProducts = (fun) => {
   // fun = function
