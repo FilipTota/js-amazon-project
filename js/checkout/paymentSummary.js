@@ -2,6 +2,7 @@ import { cart } from "../../data/cart.js";
 import { getProduct } from "../../data/products.js";
 import { getDeliveryOption } from "../../data/deliveryOptions.js";
 import { formatCurrency } from "../utils/money.js";
+import { addOrder } from "../../data/orders.js";
 
 export const renderPaymentSummary = () => {
   // to get total price of items inside order summary:
@@ -74,11 +75,46 @@ export const renderPaymentSummary = () => {
       </div>
     </div>
 
-    <button class="place-order-button button-primary">
+    <button class="place-order-button button-primary js-place-order">
       Place your order
     </button>
   `;
   document.querySelector(".js-payment-summary").innerHTML = paymentSummaryHTML;
+
+  // functionality to place order
+  document
+    .querySelector(".js-place-order")
+    .addEventListener("click", async () => {
+      // make request to the backend to create the order with /orders
+      // to create order we need to use POST
+
+      try {
+        const response = await fetch("https://supersimplebackend.dev/orders", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json", // this tells our backend what type of data we are sending in our request
+            // here we are gonna send some json (object)
+          }, // header gives out backend more informations about our request
+          body: JSON.stringify({
+            // actual data we are gonna send to backedn
+            cart: cart, // we can't sand an object directly, we need to convert it into a JSON string
+          }),
+        });
+
+        // to get the data attached to the response:
+        const order = await response.json(); // response.json is also asynchronous to we are gonna use await
+        // console.log("order :>> ", order);
+        addOrder(order);
+      } catch (error) {
+        console.error("error :>> ", error);
+      }
+
+      // after we create the order we should go to the orders page
+      // we're gonna do that with window.location
+      // window.location is a special object provided by JavaScript and it lets us control the URL at the top of the browser
+      window.location.href = "orders.html"; // changes everything after /
+      // orders.html is a 'filepath', current file is checkout.html, from which it starts nad after we change location it looks for a file called order.html
+    });
 };
 
 // Additional exercises
