@@ -52,3 +52,26 @@ const getRequestAmazon = async () => {
   }
 };
 getRequestAmazon(); // Getting CORS error by Amazon's backend because of security reasons
+
+//------18.g------
+const postReqWithoutData = async () => {
+  try {
+    const response = await fetch("https://supersimplebackend.dev/greeting", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
+    if (response.status >= 400) {
+      throw response;
+    }
+  } catch (error) {
+    if (error.status === 400) {
+      const errorMessage = await error.json();
+      console.log("errorMessage :>> ", errorMessage);
+    } else {
+      console.log("Network error. Please try again later");
+    }
+  }
+};
+postReqWithoutData();

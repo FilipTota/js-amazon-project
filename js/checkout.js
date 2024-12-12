@@ -6,7 +6,7 @@ import { renderPaymentSummary } from "./checkout/paymentSummary.js";
 
 import { loadProducts, loadProductsFetch } from "../data/products.js";
 
-import { loadCart } from "../data/cart.js";
+import { loadCart, loadCartFetch } from "../data/cart.js";
 
 // OOP practice
 // import "../data/car.js";
@@ -33,21 +33,28 @@ const loadPage = async () => {
     // throw "error1";
 
     await loadProductsFetch();
-    // await loadCart(); -> await await only works with promises, it doesn't do anything with callback
-    await new Promise((resolve, reject) => {
-      // if we want to manually create an error inside promise:
-      // throw "error2"; // this error wil go inside .catch() of promise, unless we have await promise, then it wil be thrown inside catch{}
+    await loadCartFetch();
 
-      // second way of creating an error in promise is by creating a error in the future
-      // throw doesn't work in the future
-      // so if we want to create an error in the future (inside the function of loadCart)
-      // we can use feature of a promise called reject
-      loadCart(() => {
-        // reject("error3"); // reject is a function that lets us create an error in the future (asynchronously)
-        // it created an error in the future (asynchronously) and it goes to catch{}
-        resolve();
-      });
-    });
+    // Exercise: use Promise.all to run loadProductsFetch and loadCartFetch:
+    // await Promise.all([loadProductsFetch(), loadCartFetch()]);
+
+    // await loadCart(); -> await await only works with promises, it doesn't do anything with callback
+    // await new Promise((resolve, reject) => {
+    //   // if we want to manually create an error inside promise:
+    //   // throw "error2"; // this error wil go inside .catch() of promise, unless we have await promise, then it wil be thrown inside catch{}
+
+    //   // second way of creating an error in promise is by creating a error in the future
+    //   // throw doesn't work in the future
+    //   // so if we want to create an error in the future (inside the function of loadCart)
+    //   // we can use feature of a promise called reject
+    //   loadCart(() => {
+    //     // reject("error3"); // reject is a function that lets us create an error in the future (asynchronously)
+    //     // it created an error in the future (asynchronously) and it goes to catch{}
+    //     resolve();
+    //   });
+
+    //   loadCartFetch();
+    // });
     // const value = await new Promise((resolve) => {
     //   loadCart(() => {
     //     resolve("value1");
