@@ -40,12 +40,10 @@ const loadOrdersPage = async () => {
     let productsHTML = "";
 
     order.products.forEach((productDetails) => {
-      console.log("productDetails :>> ", productDetails);
       const deliveryTime = dayjs(productDetails.estimatedDeliveryTime).format(
         "MMMM DD"
       );
       const product = getProduct(productDetails.productId);
-      console.log("product :>> ", product);
       productsHTML += `
             <div class="product-image-container">
               <img src="${product.image}" />
